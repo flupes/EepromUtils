@@ -1,6 +1,6 @@
 # Build the test programs
 
-set(LIBS arduinoutils arduinolibs corearduino)
+set(LIBS eepromUtils arduinolibs corearduino)
 
 # Create the executables
 add_program(showEeprom ${LIBS})
