@@ -1,5 +1,5 @@
 # Define the local library
-add_library(arduinoutils
+add_library(eepromUtils
     SafeEeprom.cpp
     EnduranceEeprom.cpp
     EepromRingBuffer.cpp
