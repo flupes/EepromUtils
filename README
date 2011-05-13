@@ -1,15 +1,15 @@
 EepromUtils provides facilities to manage data on the Arduino EEPROM.
 
-EepromUtils is a library of classes allowing an easy acces to the
+EepromUtils is a library of classes allowing an easy access to the
 permanent storage (EEPROM) of an AVR microprocessor on an Arduino Board.
 
-The library provides the following functionalities:
+The library provides the following functionality:
 
-- SafeEeprom allows serveral data types to be written to and read from
+- SafeEeprom allows several data types to be written to and read from
   EEPROM while providing boundary checks.
 
 - EnduranceEeprom implement a circular buffer to minimize wear when
-  writting repiteveliy data to the EEPROM
+  writing repetitively data to the EEPROM
 
 - EepromRingBuffer provides a ring buffer for arbitrary data types and
   uses EnduranceEeprom to minimize EEPROM wear due to the indexes
