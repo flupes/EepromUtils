@@ -88,7 +88,6 @@ public:
    */
   static int pageSize();
 
-#ifndef NDEBUG
   /** Print on the serial port the content of the eeprom.
       
       The function prints the bytes per memory pages, so it may
@@ -98,7 +97,6 @@ public:
       @param len    how many bytes to print [default=-1 -> print all]
   */
   static void show(uint16_t start=0, int len=-1);
-#endif
 
 };
 
