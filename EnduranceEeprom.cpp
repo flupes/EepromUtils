@@ -27,6 +27,7 @@
 #include <HardwareSerial.h>
 #endif
 
+#include <stdlib.h>     // for exit
 
 EnduranceEeprom::EnduranceEeprom(uint16_t startAddr, uint16_t endurFactor, size_t dataSize) :
   m_statusAddr(startAddr),
