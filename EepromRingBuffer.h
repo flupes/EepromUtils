@@ -60,7 +60,9 @@ public:
   /** Rotate the ring buffer by *steps* elements.
 
       This methods increment the ring buffer last element by steps, and
-      also mark all the skipped elements with 0xFF.
+      also mark all the skipped elements with 0xFF. After the rotate, the
+      ring buffer index point to the element with only 0xFF that rotate
+      created.
 
       @param steps      number of single element rotation to perform
    */
@@ -69,10 +71,14 @@ public:
   /** Returns the element in the ring buffer referenced by the given  index.
      
       Index is a signed integer and can be positive of negative. 0 index
-      returns the last elements inserted in the ring buffer. A negative
-      index indicate a past element (from the last). A positive (less
-      meaningfull) will be accessing elements from the older one: +1 is
+      returns the last elements inserted in the ring buffer. A positive
+      index indicate a past element (from the last). A negative (less
+      meaningfull) will be accessing elements from the older one: -1 is
       the older element.
+
+      @warning The positive/negative meaning of index can be
+      counterintuitive since we query elements in the past with positive
+      indexes.
 
       @param index      index of the desired element
       @param data       pointer to a location where to store the data read

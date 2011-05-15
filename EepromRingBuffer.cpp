@@ -20,7 +20,9 @@
 
 #include "SafeEeprom.h"
 
+#ifndef NDEBUG
 #include "HardwareSerial.h"
+#endif
 
 #include <stdlib.h>     // for exit
 
@@ -50,33 +52,68 @@ EepromRingBuffer::EepromRingBuffer(uint16_t startAddr,
 
 void EepromRingBuffer::push(void *data)
 {
-  Serial.print("push: Current index = ");
+
+#ifndef NDEBUG
+  Serial.print("push: Current byte index = ");
   Serial.print(m_ramIndex.last, DEC);
+#endif
   m_ramIndex.last = (m_ramIndex.last+m_dataSize) % m_bufferLength;
-  Serial.print(" -> New index = ");
+#ifndef NDEBUG
+  Serial.print(" -> New byte index = ");
   Serial.println(m_ramIndex.last, DEC);
+#endif
   SafeEeprom::write_block(m_bufferStart+m_ramIndex.last, data, m_dataSize);
   m_eepromIndex.writeData((void *)&m_ramIndex);
 }
 
 void EepromRingBuffer::get(int index, void *data)
 {
-  SafeEeprom::read_block(m_bufferStart+(index*m_dataSize)%m_bufferLength, data, m_dataSize);
+#ifndef NDEBUG
+  Serial.print("-- get index=");
+  Serial.print(index, DEC);
+#endif
+  // The if statment for positive and negative values of the index
+  // seems necessary because the module function did not generate
+  // the desired values for negative numbers!
+  if ( index < 0 ) {
+    index = (-m_dataSize*index) % m_bufferLength;
+    index = m_ramIndex.last + index;
+    if ( (uint16_t)index > m_bufferLength-1 ) index -= m_bufferLength;
+  }
+  else {
+    index = (m_dataSize*index) % m_bufferLength;
+    index = m_ramIndex.last - index;
+    if ( index < 0 ) index += m_bufferLength;
+  }
+#ifndef NDEBUG
+  Serial.print(" -> byte index=");
+  Serial.print(index, DEC);
+  Serial.print(" :: ");
+#endif
+  SafeEeprom::read_block(m_bufferStart+index, data, m_dataSize);
 }
 
 void EepromRingBuffer::rotate(uint16_t steps)
 {
+#ifndef NDEBUG
   Serial.print("rotate (steps=");
   Serial.print(steps, DEC);
-  Serial.print(") : Current index = ");
+  Serial.print(") : Current byte index = ");
   Serial.print(m_ramIndex.last, DEC);
+#endif
   if ( steps < bufferSize() ) {
+    m_ramIndex.last += m_dataSize;
     for (uint16_t i=0; i<steps*m_dataSize; i++) {
-      m_ramIndex.last = (m_ramIndex.last+1) % m_bufferLength;
+      m_ramIndex.last = m_ramIndex.last % m_bufferLength;
       SafeEeprom::write_byte(m_bufferStart+m_ramIndex.last, 0xFF);
+      m_ramIndex.last++;
     }
-    Serial.print(" -> New index = ");
+    m_ramIndex.last -= m_dataSize;
+    m_ramIndex.last = m_ramIndex.last % m_bufferLength;
+#ifndef NDEBUG
+    Serial.print(" -> New byte index = ");
     Serial.println(m_ramIndex.last, DEC);
+#endif
     m_eepromIndex.writeData((void *)&m_ramIndex);
   }
   else {
