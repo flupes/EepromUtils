@@ -101,6 +101,17 @@ public:
    */
   uint16_t storageSize();
 
+  /** Returns the size of the buffer in element unit.
+
+      @note This method require one division. The tradeoff here is that we
+      save on int of storage by keeping the total buffer length in bytes
+      rather than the buffer size: the buffer length is used more often
+      and thus we compute buffer size if required.
+  */
+  uint16_t bufferSize();
+
+  uint16_t currentIndex();
+
   /** Structure to maintain the ring buffer indexes */
   struct Indexes {
     uint16_t last;  /** Index of the last element inserted in the ring buffer */

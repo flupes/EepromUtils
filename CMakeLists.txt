@@ -3,6 +3,7 @@ add_library(eepromUtils
     SafeEeprom.cpp
     EnduranceEeprom.cpp
     EepromRingBuffer.cpp
+    TimePermRingBuffer.cpp
 )
 
 # Where to find the includes

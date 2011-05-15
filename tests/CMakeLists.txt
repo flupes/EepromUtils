@@ -8,3 +8,6 @@ add_program(enduranceEepromClear ${LIBS})
 add_program(enduranceEepromTest ${LIBS})
 add_program(eepromRingBufferClear ${LIBS})
 add_program(eepromRingBufferTest ${LIBS})
+add_program(timeRingBufferClear ${LIBS})
+add_program(timeRingBufferTest ${LIBS})
+

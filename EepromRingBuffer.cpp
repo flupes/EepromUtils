@@ -66,9 +66,11 @@ void EepromRingBuffer::get(int index, void *data)
 
 void EepromRingBuffer::rotate(uint16_t steps)
 {
-  Serial.print("rotate: Current index = ");
+  Serial.print("rotate (steps=");
+  Serial.print(steps, DEC);
+  Serial.print(") : Current index = ");
   Serial.print(m_ramIndex.last, DEC);
-  if ( steps < m_bufferLength / m_dataSize ) {
+  if ( steps < bufferSize() ) {
     for (uint16_t i=0; i<steps*m_dataSize; i++) {
       m_ramIndex.last = (m_ramIndex.last+1) % m_bufferLength;
       SafeEeprom::write_byte(m_bufferStart+m_ramIndex.last, 0xFF);
@@ -94,4 +96,14 @@ void EepromRingBuffer::clear()
 uint16_t EepromRingBuffer::storageSize()
 {
   return m_eepromIndex.storageSize() + m_bufferLength;
+}
+
+uint16_t EepromRingBuffer::bufferSize()
+{
+  return m_bufferLength / m_dataSize;
+}
+
+uint16_t EepromRingBuffer::currentIndex()
+{
+  return m_ramIndex.last / m_dataSize;
 }
