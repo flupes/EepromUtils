@@ -80,7 +80,6 @@ int SafeEeprom::pageSize()
   return E2PAGESIZE;
 }
 
-#ifndef NDEBUG
 void SafeEeprom::show(uint16_t start, int len)
 {
   uint16_t ptr;     // start of the first page we will print
@@ -100,6 +99,7 @@ void SafeEeprom::show(uint16_t start, int len)
     if ( end > E2END+1 ) end = E2END;
   }
 
+#ifndef NDEBUG
   // iterate through all pages
   int page = ptr / E2PAGESIZE;
   uint8_t data = 0;
@@ -119,6 +119,7 @@ void SafeEeprom::show(uint16_t start, int len)
     page++;
     Serial.println();
   }
-
+#else
+#warning "SafeEeprom is a noop with NDEBUG on."
+#endif  
 }
-#endif
