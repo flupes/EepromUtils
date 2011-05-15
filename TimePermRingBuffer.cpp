@@ -18,7 +18,7 @@ TimePermRingBuffer::TimePermRingBuffer(uint16_t startAddr, uint16_t bufferSize,
   }
 }
 
-void TimePermRingBuffer::insert(DataSample &data, long current_time)
+bool TimePermRingBuffer::insert(DataSample &data, long current_time)
 {
   long last_time, delta, steps;
   m_lastTimeStamp.readData((void*)&last_time);
@@ -33,7 +33,7 @@ void TimePermRingBuffer::insert(DataSample &data, long current_time)
 
   if ( delta > m_period * m_dataSize ) {
     // elapsed time greater than buffer time span
-    Serial.println("------ elapsed time greater than buffer time span");
+    Serial.println("------ elapsed time greater than buffer time span -> clear");
     clear();
     m_lastTimeStamp.writeData((void*)&current_time);
     push(data.data());
@@ -44,13 +44,19 @@ void TimePermRingBuffer::insert(DataSample &data, long current_time)
       // this is time to insert the new sample
       if ( steps > 1 ) {
         // elapsed time more than one single period
-        Serial.println("------ elapsed time more than a single period");
+        Serial.print("------ elapsed time more than a single period -> rotate steps = ");
+        Serial.println(steps-1, DEC);
         rotate(steps-1);
       }
       m_lastTimeStamp.writeData((void*)&current_time);
       push(data.data());
     }
+    else {
+      Serial.println("------ period not elapsed -> no insertion");
+      return false;
+    }
   }
+  return true;
 }
 
 long TimePermRingBuffer::read(int index, DataSample &data)

@@ -10,7 +10,7 @@ public:
   TimePermRingBuffer(uint16_t startAddr, uint16_t bufferSize,
                      size_t dataSize, int timePeriod);
 
-  void insert(DataSample &data, long time);
+  bool insert(DataSample &data, long time);
 
   long read(int index, DataSample &data);
 
