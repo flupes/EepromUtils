@@ -4,8 +4,10 @@
 
 TimePermRingBuffer samples(START_ADDR, BUFFER_SZ, sizeof(FloatData), PERIOD);
 
-long time = 0;
-int step = 1;
+long times[] = { 0, 1, 2, 3, 4, 6, 8, 10, 11, 12, 14, 16, 19, 20, 22, 24, 29, 30, 32, 33, 34, 36, 38, 56, 58, 60 };
+//long times[] = { 20, 22, 24, 29, 30, 32, 33, 34, 36, 38, 56, 58, 60 };
+
+short counter = 0;
 
 void printBuffer()
 {
@@ -41,7 +43,9 @@ void loop()
 {
   FloatSample fs;
   bool a;
-
+  long time;
+  
+  time = times[counter % (sizeof(times)/sizeof(long))];
   fs.set(time/10.0);
 
   Serial.println("");
@@ -59,8 +63,7 @@ void loop()
     delay(3000);
   }
 
-  time += step;
-  if ( 0 == time % 5  )  step++;
+  counter++;
 }
 
 int main(void)
