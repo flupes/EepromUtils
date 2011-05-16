@@ -29,13 +29,13 @@
 
     Despite EnduranceEeprom also uses a circular buffer to minimize the
     wear of the EEPROM, the purpose is really different: the
-    EepromRingBuffer is designed to store a serie of data samples.
+    EepromRingBuffer is designed to store a series of data samples.
  */
 class EepromRingBuffer
 {
 public:
-  /** Create a ring buffer on the eeprom.
-      @param startAddr      at wich EEPROM address the data structure will start
+  /** Create a ring buffer on the EEPROM.
+      @param startAddr      at which EEPROM address the data structure will start
       @param bufferSize     desired size of ring buffer
       @param dataSize       size of the each element to store
       @param indexEndurance endurance factor to use for the ring buffer index
@@ -53,7 +53,7 @@ public:
                    uint16_t indexEndurance=1);
 
   /** Push a new data sample in the buffer.
-      @param data        pointer to the the data to be copied to the eeprom buffer
+      @param data        pointer to the the data to be copied to the EEPROM buffer
   */
   void push(void *data);
 
@@ -73,11 +73,11 @@ public:
       Index is a signed integer and can be positive of negative. 0 index
       returns the last elements inserted in the ring buffer. A positive
       index indicate a past element (from the last). A negative (less
-      meaningfull) will be accessing elements from the older one: -1 is
+      meaningful) will be accessing elements from the older one: -1 is
       the older element.
 
       @warning The positive/negative meaning of index can be
-      counterintuitive since we query elements in the past with positive
+      counter intuitive since we query elements in the past with positive
       indexes.
 
       @param index      index of the desired element
@@ -90,7 +90,7 @@ public:
 
   /** Clears completely the ring buffer.
 
-      This methods writed 0xFF to all the EEPROM bytes used by the ring
+      This methods writes 0xFF to all the EEPROM bytes used by the ring
       buffer. The EEPROM area used to store the endurance indexes are not
       cleared, but the last element is assigned to the first memory
       address of the ring buffer (not a significant things from the user
@@ -103,13 +103,13 @@ public:
       The return size includes the Endurance Indexes size plus the
       Ring Buffer size itself.
       
-      @return total storage size required for hte ring buffer
+      @return total storage size required for the ring buffer
    */
   uint16_t storageSize();
 
   /** Returns the size of the buffer in element unit.
 
-      @note This method require one division. The tradeoff here is that we
+      @note This method require one division. The trade-off here is that we
       save on int of storage by keeping the total buffer length in bytes
       rather than the buffer size: the buffer length is used more often
       and thus we compute buffer size if required.
@@ -126,7 +126,7 @@ public:
 
 protected:
   EnduranceEeprom m_eepromIndex;
-  uint16_t m_bufferLength;          /** Store the total lenght of the buffer:
+  uint16_t m_bufferLength;          /** Store the total length of the buffer:
                                         ring buffer size * data size */
   uint16_t m_dataSize;              /** Keep the the data size of one element */
 

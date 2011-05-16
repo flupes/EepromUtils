@@ -25,7 +25,7 @@
    Class to access the permanent storage (EEPROM) of the AVR chip.
    
    This class aggregates static methods for a direct access to the
-   EEPROM. It simply wraps the avr/eeprom.h functionalities.
+   EEPROM. It simply wraps the avr/eeprom.h functionality.
  */
 class SafeEeprom
 {
@@ -88,7 +88,7 @@ public:
    */
   static int pageSize();
 
-  /** Print on the serial port the content of the eeprom.
+  /** Print on the serial port the content of the EEPROM.
       
       The function prints the bytes per memory pages, so it may
       include some extra padding bytes at the start and the end.
