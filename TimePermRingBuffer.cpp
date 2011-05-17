@@ -2,13 +2,12 @@
 
 #include <HardwareSerial.h>
 
-#define ENDURANCE_FACTOR 8
-
 TimePermRingBuffer::TimePermRingBuffer(uint16_t startAddr, uint16_t bufferSize,
-                                       size_t dataSize, int timePeriod) :
-  EepromRingBuffer(startAddr, bufferSize, dataSize, ENDURANCE_FACTOR),
+                                       size_t dataSize, int timePeriod,
+                                       uint16_t endurFactor) :
+  EepromRingBuffer(startAddr, bufferSize, dataSize, endurFactor),
   m_period(timePeriod),
-  m_lastTimeStamp(startAddr+storageSize(), ENDURANCE_FACTOR, sizeof(long))
+  m_lastTimeStamp(startAddr+storageSize(), endurFactor, sizeof(long))
 {
   long time;
   m_lastTimeStamp.readData((void *)&time);
