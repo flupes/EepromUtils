@@ -20,6 +20,7 @@
 #define SafeEeprom_h
 
 #include <stddef.h>
+#include <stdint.h>
 
 /**
    Class to access the permanent storage (EEPROM) of the AVR chip.
