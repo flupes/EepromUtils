@@ -14,7 +14,6 @@ The library provides the following functionality:
 - EepromRingBuffer provides a ring buffer for arbitrary data types and
   uses EnduranceEeprom to minimize EEPROM wear due to the indexes
 
-WARNING: This library is not ready for general use yet! It is still being
-debugged...
+WARNING: This library is still in alpha stage!
 
 Lorenzo Flueckiger -- May 2011
