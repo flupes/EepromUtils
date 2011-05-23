@@ -1,6 +1,8 @@
 #include "TimePermRingBuffer.h"
 
+#ifdef SERIAL_DEBUG
 #include <HardwareSerial.h>
+#endif
 
 TimePermRingBuffer::TimePermRingBuffer(uint16_t startAddr, uint16_t bufferSize,
                                        size_t dataSize, int timePeriod,
@@ -23,17 +25,21 @@ bool TimePermRingBuffer::insert(DataSample &data, long current_time)
   m_lastTimeStamp.readData((void*)&last_time);
   delta = current_time - last_time;
 
+#ifdef SERIAL_DEBUG
   Serial.print("==== TimePermRingBuffer::insert -> current=");
   Serial.print(current_time, DEC);
   Serial.print(" - last_time=");
   Serial.print(last_time, DEC);
   Serial.print(" : delta=");
   Serial.println(delta, DEC);
+#endif
 
   if ( delta < 0 ) {
     // something happened: we are going back in the past
     // just let clear everything and start orer
+#ifdef SERIAL_DEBUG
     Serial.println("------ back to the past -> clear");
+#endif
     clear();
     m_lastTimeStamp.writeData((void*)&current_time);
     push(data.data());
@@ -42,7 +48,9 @@ bool TimePermRingBuffer::insert(DataSample &data, long current_time)
 
   if ( delta > m_period * bufferSize() ) {
     // elapsed time greater than buffer time span
+#ifdef SERIAL_DEBUG
     Serial.println("------ elapsed time greater than buffer time span -> clear");
+#endif
     clear();
     m_lastTimeStamp.writeData((void*)&current_time);
     push(data.data());
@@ -54,8 +62,10 @@ bool TimePermRingBuffer::insert(DataSample &data, long current_time)
         // this is time to insert the new sample
         if ( steps > 1 ) {
           // elapsed time more than one single period
+#ifdef SERIAL_DEBUG
           Serial.print("------ elapsed time more than a single period -> rotate steps = ");
           Serial.println(steps-1, DEC);
+#endif
           rotate(steps-1);
         }
         m_lastTimeStamp.writeData((void*)&current_time);
@@ -63,7 +73,9 @@ bool TimePermRingBuffer::insert(DataSample &data, long current_time)
       }      
     }
     else {
+#ifdef SERIAL_DEBUG
       Serial.println("------ period not elapsed -> no insertion");
+#endif
       return false;
     }
   }

@@ -23,7 +23,7 @@
 
 #include "SafeEeprom.h"
 
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
 #include <HardwareSerial.h>
 #endif
 
@@ -39,7 +39,7 @@ EnduranceEeprom::EnduranceEeprom(uint16_t startAddr, uint16_t endurFactor, size_
     if ( (startAddr+storageSize()) > (1+E2END) ) {
       exit(-1);
     }
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
     if ( ( dataSize % E2PAGESIZE ) != 0 ) {
       Serial.println("EnduranceEeprom Warning: dataSize is not a multiple of the page size -> non optimal endurance!");
     }
@@ -138,7 +138,7 @@ bool EnduranceEeprom::findCurrent()
   // Check CRC to make sure this value was correctly written 
   uint16_t crc = memCrc16(m_dataAddr+(m_status.index-1)*m_dataSize, m_dataSize);
   if ( crc != m_status.crc16 ) {
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
     Serial.println("EnduranceEeprom Warning: memory corruption detected!");
 #endif
     // Not sure yet what to do in case of corrupted data...

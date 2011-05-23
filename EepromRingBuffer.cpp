@@ -20,7 +20,7 @@
 
 #include "SafeEeprom.h"
 
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
 #include "HardwareSerial.h"
 #endif
 
@@ -53,12 +53,12 @@ EepromRingBuffer::EepromRingBuffer(uint16_t startAddr,
 void EepromRingBuffer::push(void *data)
 {
 
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
   Serial.print("push: Current byte index = ");
   Serial.print(m_ramIndex.last, DEC);
 #endif
   m_ramIndex.last = (m_ramIndex.last+m_dataSize) % m_bufferLength;
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
   Serial.print(" -> New byte index = ");
   Serial.println(m_ramIndex.last, DEC);
 #endif
@@ -68,7 +68,7 @@ void EepromRingBuffer::push(void *data)
 
 void EepromRingBuffer::get(int index, void *data)
 {
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
   Serial.print("-- get index=");
   Serial.print(index, DEC);
 #endif
@@ -85,7 +85,7 @@ void EepromRingBuffer::get(int index, void *data)
     index = m_ramIndex.last - index;
     if ( index < 0 ) index += m_bufferLength;
   }
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
   Serial.print(" -> byte index=");
   Serial.print(index, DEC);
   Serial.print(" :: ");
@@ -95,7 +95,7 @@ void EepromRingBuffer::get(int index, void *data)
 
 void EepromRingBuffer::rotate(uint16_t steps)
 {
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
   Serial.print("rotate (steps=");
   Serial.print(steps, DEC);
   Serial.print(") : Current byte index = ");
@@ -110,7 +110,7 @@ void EepromRingBuffer::rotate(uint16_t steps)
     }
     m_ramIndex.last -= m_dataSize;
     m_ramIndex.last = m_ramIndex.last % m_bufferLength;
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
     Serial.print(" -> New byte index = ");
     Serial.println(m_ramIndex.last, DEC);
 #endif

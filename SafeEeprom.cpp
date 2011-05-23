@@ -18,7 +18,7 @@
 */
 #include <avr/eeprom.h>
 
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
 #include <HardwareSerial.h>
 #endif
 
@@ -99,7 +99,7 @@ void SafeEeprom::show(uint16_t start, int len)
     if ( end > E2END+1 ) end = E2END;
   }
 
-#ifndef NDEBUG
+#ifdef SERIAL_DEBUG
   // iterate through all pages
   int page = ptr / E2PAGESIZE;
   uint8_t data = 0;
@@ -120,6 +120,6 @@ void SafeEeprom::show(uint16_t start, int len)
     Serial.println();
   }
 #else
-#warning "SafeEeprom is a noop with NDEBUG on."
+#warning "SafeEeprom is a noop with SERIAL_DEBUG on."
 #endif  
 }
