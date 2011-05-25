@@ -55,6 +55,8 @@ EnduranceEeprom::EnduranceEeprom(uint16_t startAddr, uint16_t endurFactor, size_
       m_status.crc16 = memCrc16(m_dataAddr, m_dataSize);
       SafeEeprom::write_block(m_statusAddr, (void *)&m_status, sizeof(Status));
     }
+    else {
+    }
   }
   else {
     m_dataAddr = m_statusAddr;
@@ -128,15 +130,22 @@ bool EnduranceEeprom::findCurrent()
   uint16_t next;
   Status ns;
   // Iterate trhough the status buffer to find which was the last element
-  while ( addr < m_endurFactor*sizeof(Status) || ! found ) {
+  while ( addr < m_dataAddr && ! found ) {
     next = addr + sizeof(Status);
-    if ( next == m_endurFactor*sizeof(Status) ) next = m_statusAddr;
+    if ( next == m_dataAddr ) { 
+      next = m_statusAddr;
+    }
     SafeEeprom::read_block(addr, (void *)&m_status, sizeof(Status));
     SafeEeprom::read_block(next, (void *)&ns, sizeof(Status));
-    if ( (ns.index-m_status.index) > 1 ) found = true; else addr += sizeof(Status);
+    if ( (ns.index-m_status.index) > 1 ) {
+      found = true; 
+    }
+    else {
+      addr += sizeof(Status);
+    }
   }
   // Check CRC to make sure this value was correctly written 
-  uint16_t crc = memCrc16(m_dataAddr+(m_status.index-1)*m_dataSize, m_dataSize);
+  uint16_t crc = memCrc16(m_dataAddr+((m_status.index-1)%m_endurFactor)*m_dataSize, m_dataSize);
   if ( crc != m_status.crc16 ) {
 #ifdef SERIAL_DEBUG
     Serial.println("EnduranceEeprom Warning: memory corruption detected!");
