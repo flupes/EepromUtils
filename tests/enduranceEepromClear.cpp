@@ -17,7 +17,7 @@ int main(void)
   
   uint16_t size = ENDURANCE*(sizeof(EnduranceEeprom::Status)+sizeof(Sample));
   for (uint16_t i=EESTART; i<EESTART+size; i++) {
-    SafeEeprom::write_byte(i, 0x00);
+    SafeEeprom::write_byte(i, 0xFF);
   }
   
   return 0;
