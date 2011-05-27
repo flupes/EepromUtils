@@ -35,7 +35,22 @@ public:
 
   long read(int index, DataSample &data);
 
+  /** Return the time stamp of the last element push in the buffer. 
+      @return timestamp in arbitrary units
+   */
   long lastTimeStamp();
+
+  /** Artifically set the last time stamp of the buffer.
+      @warning This method breaks the whole logic of the timed
+      ring buffer. It should only be used for specific 
+      initialization cases.
+   */
+  void setTimeStamp(long ts);
+
+  /** Return the period of this timed ring buffer.
+      @return delay between two samples
+  */
+  int period();
 
   uint16_t storageSize();
 

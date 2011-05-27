@@ -1,5 +1,7 @@
 #include "TimePermRingBuffer.h"
 
+//#include <stdint.h>
+
 #ifdef SERIAL_DEBUG
 #include <HardwareSerial.h>
 #endif
@@ -11,12 +13,22 @@ TimePermRingBuffer::TimePermRingBuffer(uint16_t startAddr, uint16_t bufferSize,
   m_period(timePeriod),
   m_lastTimeStamp(startAddr+storageSize(), endurFactor, sizeof(long))
 {
-  long time;
-  m_lastTimeStamp.readData((void *)&time);
-  if ( 0xFFFFFFFFl == time ) {
-    time = -100000l;
-    m_lastTimeStamp.writeData((void *)&time);
-  }
+  // long time;
+  // m_lastTimeStamp.readData((void *)&time);
+  // if ( 0xFFFFFFFFl == time ) {
+  //   time = INT32_MIN;
+  //   m_lastTimeStamp.writeData((void *)&time);
+  // }
+}
+
+int TimePermRingBuffer::period()
+{
+  return m_period;
+}
+
+void TimePermRingBuffer::setTimeStamp(long ts)
+{
+  m_lastTimeStamp.writeData((void *)&ts);
 }
 
 bool TimePermRingBuffer::insert(DataSample &data, long current_time)
