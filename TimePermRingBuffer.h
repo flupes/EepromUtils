@@ -52,6 +52,11 @@ public:
   */
   int period();
 
+  /** Return the time span of this timed ring buffer.
+      @return time span in arbitrary time unit.
+  */
+  long timeSpan();
+
   uint16_t storageSize();
 
 protected:

@@ -26,6 +26,11 @@ int TimePermRingBuffer::period()
   return m_period;
 }
 
+long TimePermRingBuffer::timeSpan()
+{
+  return m_period * bufferSize();
+}
+
 void TimePermRingBuffer::setTimeStamp(long ts)
 {
   m_lastTimeStamp.writeData((void *)&ts);
@@ -58,7 +63,7 @@ bool TimePermRingBuffer::insert(DataSample &data, long current_time)
     return true;
   }
 
-  if ( delta > m_period * bufferSize() ) {
+  if ( delta > timeSpan() ) {
     // elapsed time greater than buffer time span
 #ifdef SERIAL_DEBUG
     Serial.println("------ elapsed time greater than buffer time span -> clear");
