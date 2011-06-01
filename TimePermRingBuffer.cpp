@@ -43,7 +43,9 @@ bool TimePermRingBuffer::insert(DataSample &data, long current_time)
   delta = current_time - last_time;
 
 #ifdef SERIAL_DEBUG
-  Serial.print("==== TimePermRingBuffer::insert -> current=");
+  Serial.print("==== TimePermRingBuffer[");
+  Serial.print(m_bufferStart, DEC);
+  Serial.print("]::insert -> current=");
   Serial.print(current_time, DEC);
   Serial.print(" - last_time=");
   Serial.print(last_time, DEC);
