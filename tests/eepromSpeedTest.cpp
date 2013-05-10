@@ -28,8 +28,8 @@
 #include "SafeEeprom.h"
 
 #include <avr/eeprom.h>
-#include <wiring.h>
 #include <HardwareSerial.h>
+#include <Arduino.h>
 
 const unsigned int size = sizeof(long);
 const unsigned int length = (SafeEeprom::memSize()+1)/size;

@@ -6,7 +6,7 @@
    not change).
 */
 
-#include <wiring.h>
+#include <Arduino.h>
 
 #include "enduranceEepromTest.h"
 #include "SafeEeprom.h"

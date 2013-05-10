@@ -7,7 +7,7 @@
 #include "enduranceEepromTest.h"
 #include "SafeEeprom.h"
 
-#include <WProgram.h>
+#include <Arduino.h>
 
 Sample sample;
 

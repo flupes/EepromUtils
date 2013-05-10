@@ -6,7 +6,7 @@
 
 #include "eepromRingBufferTest.h"
 
-#include "WProgram.h"
+#include <Arduino.h>
 
 EepromRingBuffer ring(START_ADDR, BUFFER_SZ, DATA_SZ, ENDURANCE);
 int number;

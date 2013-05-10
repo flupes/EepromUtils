@@ -1,7 +1,7 @@
 #include "timeRingBufferTest.h"
 #include "SafeEeprom.h"
 
-#include <wiring.h>
+#include <Arduino.h>
 
 int main(void)
 {

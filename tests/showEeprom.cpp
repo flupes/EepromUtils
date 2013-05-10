@@ -3,7 +3,7 @@
    the EEPROM.
  */
 
-#include <WProgram.h>
+#include <Arduino.h>
 
 #include "SafeEeprom.h"
 

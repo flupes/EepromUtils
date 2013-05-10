@@ -1,6 +1,6 @@
 #include "timeRingBufferTest.h"
 
-#include "WProgram.h"
+#include "Arduino.h"
 
 TimePermRingBuffer samples(START_ADDR, BUFFER_SZ, sizeof(FloatData), PERIOD);
 
