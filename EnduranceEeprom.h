@@ -22,6 +22,8 @@
 #include <stddef.h>
 #include <avr/io.h>
 
+#include "SafeEeprom.h"
+
 /**
    EnduranceEeprom increases the number of data writes you can do in the
    EEPROM by using a circular buffer to spread the data writes across the
@@ -56,6 +58,7 @@ public:
   
   /** Initialize a Endurance EEPROM data structure.
       
+      @param eeprom         Eeprom to use
       @param startAddr      Where in the EEPROM the data structure should start
       @param endurFactor    Endurance Factor: size of the circular buffer
       @param dataSize       Size of the element to store in the Endurance EEPROM.
@@ -70,7 +73,7 @@ public:
       without endurance, and will not consume more space than the dataSize
       itself if no endurance is required.
    */
-  EnduranceEeprom(uint16_t startAddr, uint16_t endurFactor, size_t dataSize);
+  EnduranceEeprom(SafeEeprom &ee, uint16_t startAddr, uint16_t endurFactor, size_t dataSize);
 
   /** Return the total space required for this EnduranceEeprom data structure.
    */
@@ -93,6 +96,9 @@ public:
   };
 
 protected:
+  /** Device to be used */
+  SafeEeprom &m_eeprom;
+  
   /** Current status of the circular buffers */
   Status m_status;
   

@@ -29,7 +29,8 @@
 
 #include <stdlib.h>     // for exit
 
-EnduranceEeprom::EnduranceEeprom(uint16_t startAddr, uint16_t endurFactor, size_t dataSize) :
+EnduranceEeprom::EnduranceEeprom(SafeEeprom &eeprom, uint16_t startAddr, uint16_t endurFactor, size_t dataSize) :
+  m_eeprom(eeprom),
   m_statusAddr(startAddr),
   m_endurFactor(endurFactor),
   m_dataSize(dataSize)
@@ -50,10 +51,10 @@ EnduranceEeprom::EnduranceEeprom(uint16_t startAddr, uint16_t endurFactor, size_
       // This area of memory has never been used for this circular buffer
       m_status.index = 1;
       for ( uint16_t i=0; i<m_dataSize; i++) {
-        SafeEeprom::write_byte(m_dataAddr+i, 0xFF);
+        m_eeprom.write_byte(m_dataAddr+i, 0xFF);
       }
       m_status.crc16 = memCrc16(m_dataAddr, m_dataSize);
-      SafeEeprom::write_block(m_statusAddr, (void *)&m_status, sizeof(Status));
+      m_eeprom.write_block(m_statusAddr, (void *)&m_status, sizeof(Status));
     }
     else {
     }
@@ -74,7 +75,7 @@ void EnduranceEeprom::writeData(void *data)
     uint16_t addr = m_dataAddr+index*m_dataSize;
     
     // writing first the data
-    SafeEeprom::write_block(addr, data, m_dataSize);
+    m_eeprom.write_block(addr, data, m_dataSize);
     
     // crc computation
     m_status.crc16 = memCrc16(addr, m_dataSize);
@@ -83,10 +84,10 @@ void EnduranceEeprom::writeData(void *data)
     m_status.index++;
     
     // writing last the new status: index + crc together
-    SafeEeprom::write_block(m_statusAddr+index*sizeof(Status), (void *)&m_status, sizeof(Status));
+    m_eeprom.write_block(m_statusAddr+index*sizeof(Status), (void *)&m_status, sizeof(Status));
   }
   else {
-    SafeEeprom::write_block(m_dataAddr, data, m_dataSize);
+    m_eeprom.write_block(m_dataAddr, data, m_dataSize);
   }
 }
 
@@ -94,12 +95,12 @@ bool EnduranceEeprom::readData(void *data)
 {
   if ( m_endurFactor > 1 ) {  
     uint16_t addr = m_dataAddr+((m_status.index-1)%m_endurFactor)*m_dataSize;
-    SafeEeprom::read_block(addr, data, m_dataSize);
+    m_eeprom.read_block(addr, data, m_dataSize);
     uint16_t crc = memCrc16(addr, m_dataSize);
     if ( crc == m_status.crc16 ) return true; else return false;
   }
   else {
-    SafeEeprom::read_block(m_dataAddr, data, m_dataSize);
+    m_eeprom.read_block(m_dataAddr, data, m_dataSize);
     return true;
   }
 }
@@ -118,7 +119,7 @@ uint16_t EnduranceEeprom::memCrc16(uint16_t addr, size_t len)
 {
   uint16_t crc = 0xFFFF;
   for (uint16_t i=0; i<len; i++) {
-    crc = _crc16_update(crc, SafeEeprom::read_byte(addr++));
+    crc = _crc16_update(crc, m_eeprom.read_byte(addr++));
   }
   return crc;
 }
@@ -135,8 +136,8 @@ bool EnduranceEeprom::findCurrent()
     if ( next == m_dataAddr ) { 
       next = m_statusAddr;
     }
-    SafeEeprom::read_block(addr, (void *)&m_status, sizeof(Status));
-    SafeEeprom::read_block(next, (void *)&ns, sizeof(Status));
+    m_eeprom.read_block(addr, (void *)&m_status, sizeof(Status));
+    m_eeprom.read_block(next, (void *)&ns, sizeof(Status));
     if ( (ns.index-m_status.index) > 1 ) {
       found = true; 
     }
