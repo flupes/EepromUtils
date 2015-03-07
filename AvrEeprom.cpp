@@ -1,5 +1,5 @@
 /**
-   SafeEeprom.cpp is part of EepromUtils.
+   AvrEeprom.cpp is part of EepromUtils.
 
    Copyright (c) 2011 Lorenzo Flueckiger
 
@@ -18,69 +18,71 @@
 */
 #include <avr/eeprom.h>
 
+#define SERIAL_DEBUG 1
+
 #ifdef SERIAL_DEBUG
 #include <HardwareSerial.h>
 #endif
 
 #define LAST E2END+1
 
-#include "SafeEeprom.h"
+#include "AvrEeprom.h"
 
-void SafeEeprom::write_byte(uint16_t addr, uint8_t data)
+void AvrEeprom::write_byte(uint16_t addr, uint8_t data)
 {
   if ( addr < LAST )
     eeprom_write_byte((uint8_t *)addr, data);
 }
 
-uint8_t SafeEeprom::read_byte(uint16_t addr)
+uint8_t AvrEeprom::read_byte(uint16_t addr)
 {
   return eeprom_read_byte((uint8_t *)addr);
 }
 
-void SafeEeprom::write_word(uint16_t addr, uint16_t data)
+void AvrEeprom::write_word(uint16_t addr, uint16_t data)
 {
   if ( addr < LAST-1 )
     eeprom_write_word((uint16_t *)addr, data);
 }
 
-uint16_t SafeEeprom::read_word(uint16_t addr)
+uint16_t AvrEeprom::read_word(uint16_t addr)
 {
   return eeprom_read_word((uint16_t *)addr);
 }
 
-void SafeEeprom::write_long(uint16_t addr, uint32_t data)
+void AvrEeprom::write_long(uint16_t addr, uint32_t data)
 {
   if ( addr < LAST-3 ) 
     eeprom_write_dword((uint32_t *)addr, data);
 }
 
-uint32_t SafeEeprom::read_long(uint16_t addr)
+uint32_t AvrEeprom::read_long(uint16_t addr)
 {
   return eeprom_read_dword((uint32_t *)addr);
 }
 
-void SafeEeprom::write_block(uint16_t addr, void* data, size_t len)
+void AvrEeprom::write_block(uint16_t addr, void* data, size_t len)
 {
   if ( addr < LAST+1-len )
     eeprom_write_block(data, (void *)addr, len);
 }
 
-void SafeEeprom::read_block(uint16_t addr, void* data, size_t len)
+void AvrEeprom::read_block(uint16_t addr, void* data, size_t len)
 {
   eeprom_read_block(data, (void *)addr, len);
 }
 
-int SafeEeprom::memSize()
+uint16_t AvrEeprom::memSize()
 {
   return E2END;
 }
 
-int SafeEeprom::pageSize()
+uint16_t AvrEeprom::pageSize()
 {
   return E2PAGESIZE;
 }
 
-void SafeEeprom::show(uint16_t start, int len)
+void AvrEeprom::show(uint16_t start, int len)
 {
   uint16_t ptr;     // start of the first page we will print
   uint16_t end;     // just after the last page we will print
@@ -120,6 +122,6 @@ void SafeEeprom::show(uint16_t start, int len)
     Serial.println();
   }
 #else
-#warning "SafeEeprom is a noop with SERIAL_DEBUG on."
+#warning "AvrEeprom is a noop with SERIAL_DEBUG on."
 #endif  
 }

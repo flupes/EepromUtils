@@ -23,11 +23,8 @@
 #include <stdint.h>
 
 /**
-   Class to access the permanent storage (EEPROM) of the AVR chip.
-   
-   This class aggregates static methods for a direct access to the
-   EEPROM. It simply wraps the avr/eeprom.h functionality.
- */
+   Interface to access a generic EEPROM.
+*/
 class SafeEeprom
 {
 public:
@@ -35,59 +32,59 @@ public:
       @param addr       address to put the byte
       @param data       byte to write
   */
-  static void write_byte(uint16_t addr, uint8_t data);
+  virtual void write_byte(uint16_t addr, uint8_t data);
   
   /** Read a byte from the EEPROM.
       @param addr       address of the byte to read
       @return           byte read
   */
-  static uint8_t read_byte(uint16_t addr);
+  virtual uint8_t read_byte(uint16_t addr);
   
   /** Write a word (unsigned 16 bits int) to the EEPROM.
       @param addr       address to put the word
       @param data       word to write
   */
-  static void write_word(uint16_t addr, uint16_t data);
+  virtual void write_word(uint16_t addr, uint16_t data);
   
   /** Read a word (unsigned 16 bits int) from the EEPROM.
       @param addr       address of the 2 bytes to read
       @return           word read
   */
-  static uint16_t read_word(uint16_t addr);
+  virtual uint16_t read_word(uint16_t addr);
 
   /** Write a long (unsigned 32 bits int) to the EEPROM.
       @param addr       address to put the long
       @param data       long to write
   */
-  static void write_long(uint16_t addr, uint32_t data);
+  virtual void write_long(uint16_t addr, uint32_t data);
   
   /** Read a long (unsigned 32 bits int) from the EEPROM.
       @param addr       address of the 4 bytes to read
       @return           long read
   */
-  static uint32_t read_long(uint16_t addr);
+  virtual uint32_t read_long(uint16_t addr);
 
   /** Write a block of data to the EEPROM.
       @param addr       address to put the data
       @param data       pointer to data to write
       @param len        size of the block of data to write
   */
-  static void write_block(uint16_t addr, void* data, size_t len);
+  virtual void write_block(uint16_t addr, void* data, size_t len);
   
   /** Read a block of data from the EEPROM.
       @param addr       address of the data to read
       @param data       pointer to some RAM storage for the data to read
       @param len        size of the data to read (in bytes)
   */
-  static void read_block(uint16_t addr, void* data, size_t len);
+  virtual void read_block(uint16_t addr, void* data, size_t len);
 
   /** Return the EEPROM total size (measured in bytes).
    */
-  static int memSize();
+  virtual uint16_t memSize();
 
   /** Return the size of one EEPROM page for this board.
    */
-  static int pageSize();
+  virtual uint16_t pageSize();
 
   /** Print on the serial port the content of the EEPROM.
       
@@ -97,7 +94,7 @@ public:
       @param start  start address [default=0 -> first EEPROM byte]
       @param len    how many bytes to print [default=-1 -> print all]
   */
-  static void show(uint16_t start=0, int len=-1);
+  virtual void show(uint16_t start=0, int len=-1);
 
 };
 
