@@ -9,7 +9,7 @@
 #include <Arduino.h>
 
 #include "enduranceEepromTest.h"
-#include "SafeEeprom.h"
+#include "AvrEeprom.h"
 
 int main(void)
 {
@@ -17,7 +17,7 @@ int main(void)
   
   uint16_t size = ENDURANCE*(sizeof(EnduranceEeprom::Status)+sizeof(Sample));
   for (uint16_t i=EESTART; i<EESTART+size; i++) {
-    SafeEeprom::write_byte(i, 0xFF);
+    AvrEeprom::instance().write_byte(i, 0xFF);
   }
   
   return 0;

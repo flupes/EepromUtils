@@ -5,7 +5,7 @@
 
 #include <Arduino.h>
 
-#include "SafeEeprom.h"
+#include "AvrEeprom.h"
 
 #define OFFSET 8
 #define N_BYTES 16
@@ -17,6 +17,8 @@ struct Block {
   int data[4];
 };
 
+AvrEeprom &ee = AvrEeprom::instance();
+
 void setup()
 {
   unsigned int addr = OFFSET;
@@ -24,19 +26,19 @@ void setup()
   unsigned int a;
   for (byte i = 0; i<N_BYTES; i++)
   {
-    SafeEeprom::write_byte(addr, i);
+    ee.write_byte(addr, i);
     addr++;
   } 
 
   for (byte i=0; i<N_WORDS; i++)
   {
-    SafeEeprom::write_word(addr, i+256);
+    ee.write_word(addr, i+256);
     addr += sizeof(word);
   }
 
   for (byte i=0; i<N_LONGS; i++)
   {
-    SafeEeprom::write_long(addr, (long)i+65536l);
+    ee.write_long(addr, (long)i+65536l);
     addr += sizeof(long);
   }
 
@@ -50,7 +52,7 @@ void setup()
   }
   for (byte i=0; i<N_BLOCKS; i++)
   {    
-    SafeEeprom::write_block(addr, (void *)&blocks[i], sizeof(Block));
+    ee.write_block(addr, (void *)&blocks[i], sizeof(Block));
     addr += sizeof(Block);
   }
 
@@ -60,14 +62,14 @@ void setup()
 void loop()
 {
   Serial.print("This board as ");
-  Serial.print(SafeEeprom::memSize(), DEC);
+  Serial.print(ee.memSize(), DEC);
   Serial.print(" bytes of EEPROM (Page Size = ");
-  Serial.print(SafeEeprom::pageSize(), DEC);
+  Serial.print(ee.pageSize(), DEC);
   Serial.println(")");
 
 #ifndef NDEBUG
   Serial.println("First 64 bytes of EEPROM:");
-  SafeEeprom::show(0, 64);
+  ee.show(0, 64);
 #endif
 
   unsigned int addr = OFFSET;
@@ -78,7 +80,7 @@ void loop()
 
   Serial.print("Bytes: ");
   for (byte i=0; i<N_BYTES; i++) {
-    num8 = SafeEeprom::read_byte(addr);
+    num8 = ee.read_byte(addr);
     Serial.print(num8, DEC);
     Serial.print("  ");
     addr++;
@@ -86,7 +88,7 @@ void loop()
   Serial.println();
   Serial.print("Words: ");
   for (byte i=0; i<N_WORDS; i++) {
-    num16 = SafeEeprom::read_word(addr);
+    num16 = ee.read_word(addr);
     Serial.print(num16, DEC);
     Serial.print("  ");
     addr += sizeof(word);
@@ -94,7 +96,7 @@ void loop()
   Serial.println();
   Serial.print("Longs: ");
   for (byte i=0; i<N_LONGS; i++) {
-    num32 = SafeEeprom::read_long(addr);
+    num32 = ee.read_long(addr);
     Serial.print(num32, DEC);
     Serial.print("  ");
     addr += sizeof(long);
@@ -102,7 +104,7 @@ void loop()
   Serial.println();
   Serial.println("Blocks: ");
   for (byte i=0; i<N_BLOCKS; i++) {
-    SafeEeprom::read_block(addr, (void *)&block, 4);
+    ee.read_block(addr, (void *)&block, 4);
     Serial.print("[");
     for (int j=0; j<4; j++) {
       Serial.print(block.data[j], DEC);

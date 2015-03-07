@@ -5,7 +5,7 @@
 */
 
 #include "enduranceEepromTest.h"
-#include "SafeEeprom.h"
+#include "AvrEeprom.h"
 
 #include <Arduino.h>
 
@@ -36,7 +36,7 @@ void loop(EnduranceEeprom &endurSample)
   check.a = 0;
   check.b = 0;
   endurSample.readData((void *)&check);
-  SafeEeprom::show(EESTART, endurSample.storageSize());
+  AvrEeprom::instance().show(EESTART, endurSample.storageSize());
   Serial.print("Current Sample = [");
   Serial.print(check.a, DEC);
   Serial.print(", ");
@@ -51,8 +51,8 @@ int main(void)
 
   Serial.begin(9600);
   delay(3000);
-  EnduranceEeprom endurSample(EESTART, ENDURANCE, sizeof(Sample));
-  SafeEeprom::show(EESTART, endurSample.storageSize());
+  EnduranceEeprom endurSample(AvrEeprom::instance(), EESTART, ENDURANCE, sizeof(Sample));
+  AvrEeprom::instance().show(EESTART, endurSample.storageSize());
   
   setup(endurSample);
   
